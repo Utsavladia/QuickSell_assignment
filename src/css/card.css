@@ -20,15 +20,18 @@
     justify-content: center;
     width:  16px;
     height: 16px;   
-    resize: none;
+    min-width: 16px;
+    
 }
 
 .indicator{
     width: 5px;
     height: 5px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    margin-top: auto;
+    margin-left: auto;
+    transform: translate(40%, 40%);
+    /* bottom: 0;
+    right: 0; */
     border-radius: 50%;
     background-color: skyblue;
 }
@@ -39,6 +42,7 @@
     flex-direction: column;
     color: gray;
     align-items: start;
+    width: auto;
 }
 
 .card-id{

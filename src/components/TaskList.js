@@ -16,13 +16,14 @@ import lowPriorityIcon from "../assets/Img - Low Priority.svg";
 import mediumpriorityIcon from "../assets/Img - Medium Priority.svg";
 import cancledIcon from "../assets/Cancelled.svg";
 
-function TaskList({ tickets, users, view }) {
+function TaskList({ tickets, users, view, ordering }) {
   const statusArray = ["Backlog", "Todo", "In progress", "Done", "Cancelled"];
-  const priorityArray = ["No priority", "Urgent", "High", "Medium", "Low"]; // Define your priority levels here
+  const priorityArray = ["No priority", "Urgent", "High", "Medium", "Low"];
   const priorityindex = ["No priority", "Low", "Medium", "High", "Urgent"];
+
   const statusIconMap = {
     todo: todoimage,
-    in_progress: progressIcon, // Notice how we use underscores
+    in_progress: progressIcon,
     backlog: backlogIcon,
     done: doneIcon,
     cancelled: cancledIcon,
@@ -44,7 +45,7 @@ function TaskList({ tickets, users, view }) {
     } else if (view === "priority") {
       viewArray = priorityArray;
     } else {
-      viewArray = []; // No need for viewArray for users
+      viewArray = [];
     }
 
     const groupedTasks = viewArray.reduce((acc, key) => {
@@ -69,11 +70,28 @@ function TaskList({ tickets, users, view }) {
     return groupedTasks;
   };
 
+  const sortTasks = (grouptedTasks) => {
+    const sortedGroups = {};
+    Object.entries(groupedTasks).forEach(([key, tasks]) => {
+      const sortedTasks = tasks.sort((a, b) => {
+        if (ordering === "priority") {
+          return b.priority - a.priority;
+        } else {
+          return a.title.localeCompare(b.title);
+        }
+        return 0;
+      });
+      sortedGroups[key] = sortedTasks;
+    });
+    return sortedGroups;
+  };
+
   const groupedTasks = groupTasks(tickets, view);
+  const sortedTasks = sortTasks(groupedTasks);
 
   return (
     <div className="tasksection">
-      {Object.entries(groupedTasks).map(([key, tasks]) => (
+      {Object.entries(sortedTasks).map(([key, tasks]) => (
         <div key={key} className="tasktype">
           <div className="type-heading">
             {
@@ -120,7 +138,7 @@ function TaskList({ tickets, users, view }) {
                       </div>
                     );
                   })()
-                : null // Default case if no view matches
+                : null
             }
 
             <div className="icons">

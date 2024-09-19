@@ -12,6 +12,9 @@ function App() {
     return localStorage.getItem("taskView") || "status";
   });
   const [visible, setVisible] = useState(false);
+  const [ordering, setOrdering] = useState(() => {
+    return localStorage.getItem("ordering") || "priority";
+  });
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -28,6 +31,11 @@ function App() {
 
   const handleViewChange = (event) => {
     setView(event.target.value);
+    setVisible(false);
+  };
+
+  const handleOrderingChange = (event) => {
+    setOrdering(event.target.value);
     setVisible(false);
   };
 
@@ -48,7 +56,7 @@ function App() {
           <div className="filterContainer">
             <div className="filters">
               <p>Grouping</p>
-              <select className="options" onChange={handleViewChange}>
+              <select className="options" value={view} onChange={handleViewChange}>
                 <option value="status">Status</option>
                 <option value="user">User</option>
                 <option value="priority">Priority</option>
@@ -56,7 +64,7 @@ function App() {
             </div>
             <div className="filters">
               <p>Ordering</p>
-              <select className="options" onChange={handleViewChange}>
+              <select className="options" value={ordering} onChange={handleOrderingChange}>
                 <option value="priority">Priority</option>
                 <option value="title">Title</option>
               </select>
@@ -65,7 +73,12 @@ function App() {
         )}
       </header>
       <main>
-        <TaskList tickets={tickets} users={users} view={view} />
+        <TaskList
+          tickets={tickets}
+          users={users}
+          view={view}
+          ordering={ordering}
+        />
       </main>
     </div>
   );
